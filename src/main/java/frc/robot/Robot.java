@@ -6,8 +6,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.command.Scheduler;
+
+import frc.robot.commands.CommandWithController;
+import frc.robot.subsystems.ControllerSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
@@ -22,6 +27,8 @@ public class Robot extends TimedRobot
     private String autoSelected;
     private final SendableChooser<String> chooser = new SendableChooser<>();
 
+    private Command _teleopCommand, _autonomousCommand, _testCommand;
+
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -32,6 +39,10 @@ public class Robot extends TimedRobot
         chooser.setDefaultOption("Default Auto", DEFAULT_AUTO);
         chooser.addOption("My Auto", CUSTOM_AUTO);
         SmartDashboard.putData("Auto choices", chooser);
+
+        _teleopCommand = new CommandWithController();
+
+        ControllerSubsystem.getInstance();
     }
 
     /**
@@ -42,7 +53,10 @@ public class Robot extends TimedRobot
      * SmartDashboard integrated updating.
      */
     @Override
-    public void robotPeriodic() {}
+    public void robotPeriodic()
+    {
+
+    }
 
     /**
      * This autonomous (along with the chooser code above) shows how to select between different
@@ -80,25 +94,47 @@ public class Robot extends TimedRobot
 
     /** This function is called once when teleop is enabled. */
     @Override
-    public void teleopInit() {}
+    public void teleopInit()
+    {
+        if (_autonomousCommand != null)
+            _autonomousCommand.cancel();
+
+        if (_teleopCommand != null)
+            _teleopCommand.start();
+    }
 
     /** This method is called periodically during operator control. */
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic()
+    {
+        Scheduler.getInstance().run();
+    }
 
     /** This function is called once when the robot is disabled. */
     @Override
-    public void disabledInit() {}
+    public void disabledInit()
+    {
+
+    }
 
     /** This function is called periodically when disabled. */
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic()
+    {
+
+    }
 
     /** This function is called once when test mode is enabled. */
     @Override
-    public void testInit() {}
+    public void testInit()
+    {
+
+    }
 
     /** This method is called periodically during test mode. */
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic()
+    {
+
+    }
 }
